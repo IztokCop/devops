@@ -1,17 +1,31 @@
-pipeline {
-  agent any
-  
-  stages{
-    stage('build'){
-      steps {
-      sh 'apk add perl bash'
-      sh 'perl -c program.pl'
-      }
+node {
+    printMessage("Pipeline Start..")
+
+    stage("Fetch Source Code") {
+        sh "echo stuff"
     }
-    stage('test'){
-      steps {
-      sh 'bash test.sh'
-      }
+
+    dir('./') {
+        stage("Install Requirements") {
+            sh 'echo install'
+        }
+
+        stage("Run Tests") {
+            sh 'echo jenkins_test'
+        }
+
+        stage("Deploy") {
+            if (env.BRANCH_NAME == "master") {
+                printMessage("deploying master branch")
+            } else {
+                printMessage("no deployment specified for this branch")
+            }
+        }
     }
-   }
+
+    printMessage("Pipeline End")
+}
+
+def printMessage(message) {
+    echo "${message}"
 }
